@@ -15,12 +15,11 @@ Left: Move down the pause menu
 Right: Increment the selected menu item
 
 [+ -- ..] P2:
-Up: Move up the pause menu / RAM table
-Down: Move down the pause menu / RAM table
-Left: Move forward in the menus / RAM table
-Right: Move backwards in the menus / RAM table
-A: Increment the selected menu item / RAM address
-B: Decrement the selected menu item / RAM address
+Up: Move up the pause menu / RAM table / move up by 16
+Down: Move down the pause menu / RAM table / move down by 16
+Left: Move forward in the menus / RAM table / move down by 1
+Right: Move backwards in the menus / RAM table / move up by 1
+A: Grab the selected menu item / RAM address
 Select: Reset the selected menu item / exit RAM table
 ]]
 
@@ -727,22 +726,9 @@ if(memory.readbyte(pauseAdd) == 0x25) then
  if(ramwatch) then
  gui.box(40,40,215,160,"P30") --blank screen
  gui.text(100+(selector%8)*12,40+math.floor((selector)/8)*8,"00","#000","#000")
- gui.text(67,40,ramLine(0),pauseColor[5],"clear")
- gui.text(67,48,ramLine(1),pauseColor[5],"clear")
- gui.text(67,56,ramLine(2),pauseColor[5],"clear")
- gui.text(67,64,ramLine(3),pauseColor[5],"clear")
- gui.text(67,72,ramLine(4),pauseColor[5],"clear")
- gui.text(67,80,ramLine(5),pauseColor[5],"clear")
- gui.text(67,88,ramLine(6),pauseColor[5],"clear")
- gui.text(67,96,ramLine(7),pauseColor[5],"clear")
- gui.text(67,104,ramLine(8),pauseColor[5],"clear")
- gui.text(67,112,ramLine(9),pauseColor[5],"clear")
- gui.text(67,120,ramLine(10),pauseColor[5],"clear")
- gui.text(67,128,ramLine(11),pauseColor[5],"clear")
- gui.text(67,136,ramLine(12),pauseColor[5],"clear")
- gui.text(67,144,ramLine(13),pauseColor[5],"clear")
- gui.text(67,152,ramLine(14),pauseColor[5],"clear")
- gui.text(67,160,ramLine(15),pauseColor[5],"clear")
+ for i=0,15 do
+  gui.text(67,40+(i*8),ramLine(i),pauseColor[5],"clear")
+ end
  else
  gui.box(40,40,215,135,"P30") --blank screen
  gui.text(51+(pauseLevel>0 and 16 or 0),40,pauseText[1],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[1],"clear")

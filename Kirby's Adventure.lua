@@ -8,24 +8,35 @@ featuring a slew of visual and gameplay tweaks!
 . debug access
 . minor readditions such as the cannon status
 . knightmare mode
+. exhaustive menu for editing various variables
 
 [+ -- ..] P1:
 Left: Move down the pause menu
 Right: Increment the selected menu item
 
 [+ -- ..] P2:
-Up: Move up the pause menu
-Down: Move down the pause menu
-A: Increment the selected menu item
-B: Decrement the selected menu item
-Select: Reset the selected menu item
+Up: Move up the pause menu / RAM table
+Down: Move down the pause menu / RAM table
+Left: Move forward in the menus / RAM table
+Right: Move backwards in the menus / RAM table
+A: Increment the selected menu item / RAM address
+B: Decrement the selected menu item / RAM address
+Select: Reset the selected menu item / exit RAM table
 ]]
+
+selector = 0
+pauseLevel = 0
+pauseText = {"","","","","","","","","","","",""}
+pauseText[0] = ""
+pauseColor = {"P16","P27","P28","P2A","P2B","P2C","P11","P14","P24","P00","P0F","P07"}
+ramwatch = false
+ramoffset = 0
 
 recoloring = false
 newhud = false
 invinc = false
-selector = 0
-metaknight = false
+metaknight = true
+jumpsLeft = 4
 --[[
 memory addresses of some use not featured here
 006A kirby particle xpos
@@ -41,6 +52,7 @@ memory addresses of some use not featured here
 0594 score 2560s place
 0595 score 655360s place
 6117 kirby fall speed
+7960-79ff empty ram
 ]]
 controllerAdd = 0x003C --controller, only active for one frame unlike 003A
 controllerAdd2 = 0x00E6 --other controller one pointer
@@ -50,8 +62,9 @@ xposAdd = 0x0203 --kirby xpos
 yposAdd = 0x0204 --kirby ypos
 cannonAdd = 0x050C --is in a cannon?
 scoreAdd = 0x0593 --score address
-powerAdd = 0x05E0 --powerup held
-bodyAdd = 0x05E0
+bodyAdd = 0x05E0 --powerup state ie hammer normal sleeping
+powerAdd = 0x05E1 --move being done
+inhaledAdd = 05E2 --power of enemy in mouth
 powerupAdd = 0x05E3 --current powerup
 powerup2Add = 0x076D
 stateAdd = 0x004E
@@ -61,6 +74,7 @@ usesAdd = 0x0598 --uses of ltd powerups like crash or mike
 livesAdd = 0x0599 --current lives
 livesDisplay = 0x059D --00 lives only 01 power and lives rest are overworld lives only
 yveloAdd = 0x05BE
+groundedAdd = 0x05FB --grounded
 statesAdd = 0x0604 --various states
 hudFlickerAdd = 0x004D --used for abilities like crash with flickering colors
 pauseAdd = 0x018D --color palette used to track state changes
@@ -185,6 +199,34 @@ bodies[0x0B] = "ball"
 bodies[0x0C] = "tornado"
 bodies[0x0D] = "ufo"
 bodies[0x0E] = "final boss"
+
+menus = {}
+for i=0,12,1
+do
+  menus[i] = {}
+end
+menus[0][0] = "      MENU     "
+menus[0][1] = "Basics"
+menus[0][2] = "Enhancements"
+menus[0][3] = "Powers"
+menus[0][4] = "Physics"
+menus[0][5] = "RAM"
+menus[1][0] = "     BASICS    "
+menus[1][1] = "" --dynamic health
+menus[1][2] = "" --dynamic lives
+menus[2][0] = "  ENHANCEMENTS "
+menus[2][1] = "" --dynamic recolors
+menus[2][2] = "" --dynamic lua menu
+menus[2][3] = "" --dynamic knightmare
+menus[3][0] = "    POWERS     "
+menus[3][1] = "" --dynamic power
+menus[3][2] = "" --dynamic power state
+menus[3][3] = "" --dynamic power uses
+menus[4][0] = "    PHYSICS    "
+menus[4][1] = "" --dynamic gravity
+menus[5][0] = "      RAM      "
+menus[5][1] = "0000: 0000000000000000"
+menus[5][2] = "0008: 0000000000000000"
 
 --[[other palette locations if it finds a use
 feet3 = 0x0102
@@ -674,41 +716,103 @@ end
 
 function pausee()
 if(memory.readbyte(pauseAdd) == 0x25) then
- gui.box(40,40,215,135,"P30");
- gui.text(80,24," >MOVE <CHANGE ","P16","#ffffff")
- gui.text(51,40,"Recolors: "..(function() if recoloring then return 'ON' else return 'off' end end)(),"P16","clear")
- gui.text(51,48,"LUA-Based Hud: "..(function() if newhud then return 'ON' else return 'off' end end)(),"P27","clear")
- gui.text(51,56,"Health: "..(function()if (memory.readbyte(hpAdd)==0xFF) then return '0' elseif (memory.readbyte(hpAdd)==0x37) then return "INF" else return (memory.readbyte(hpAdd)+0x01)/0x08 end end)(),"P28","clear")
- gui.text(51,64,"Lives: "..(memory.readbyte(livesAdd)),"P2A","clear")
- gui.text(51,72,"Powerup: "..(names[memory.readbyte(powerupAdd)][1]),"P2B","clear")
- gui.text(51,80,"Powerup State: "..(bodies[memory.readbyte(bodyAdd)]),"P2C","clear")
- gui.text(51,88,"Powerup Uses: "..(memory.readbyte(usesAdd)),"P11","clear")
- gui.text(51,96,"Thing: "..(0),"P14","clear")
- gui.text(51,104,"Thing: "..(0),"P24","clear")
- gui.text(51,112,"Thing: "..(0),"P00","clear")
- gui.text(51,120,"Thing: "..(0),"P0F","clear")
- gui.text(51,128,"Meta Knightmare: "..(function() if metaknight then return 'ON' else return 'off' end end)(),"P07","clear")
- gui.text(42,40+(selector*8),">","#000","clear")
+ pauseText = {"","","","","","","","","","","",""}
+ for i=0,#(menus[pauseLevel]),1
+ do
+  pauseText[i] = menus[pauseLevel][i]
+ end
+ dynamic()
 
- if(AND(memory.readbyte(controller2Add),0x08) == 0x08) then
- selector = selector-1
- if(selector == -1) then selector=11 end
+ gui.text(80,24,pauseText[0],"P16","#ffffff")
+ if(ramwatch) then
+ gui.box(40,40,215,160,"P30") --blank screen
+ gui.text(100+(selector%8)*12,40+math.floor((selector)/8)*8,"00","#000","#000")
+ gui.text(67,40,ramLine(0),pauseColor[5],"clear")
+ gui.text(67,48,ramLine(1),pauseColor[5],"clear")
+ gui.text(67,56,ramLine(2),pauseColor[5],"clear")
+ gui.text(67,64,ramLine(3),pauseColor[5],"clear")
+ gui.text(67,72,ramLine(4),pauseColor[5],"clear")
+ gui.text(67,80,ramLine(5),pauseColor[5],"clear")
+ gui.text(67,88,ramLine(6),pauseColor[5],"clear")
+ gui.text(67,96,ramLine(7),pauseColor[5],"clear")
+ gui.text(67,104,ramLine(8),pauseColor[5],"clear")
+ gui.text(67,112,ramLine(9),pauseColor[5],"clear")
+ gui.text(67,120,ramLine(10),pauseColor[5],"clear")
+ gui.text(67,128,ramLine(11),pauseColor[5],"clear")
+ gui.text(67,136,ramLine(12),pauseColor[5],"clear")
+ gui.text(67,144,ramLine(13),pauseColor[5],"clear")
+ gui.text(67,152,ramLine(14),pauseColor[5],"clear")
+ gui.text(67,160,ramLine(15),pauseColor[5],"clear")
+ else
+ gui.box(40,40,215,135,"P30") --blank screen
+ gui.text(51+(pauseLevel>0 and 16 or 0),40,pauseText[1],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[1],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),48,pauseText[2],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[2],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),56,pauseText[3],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[3],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),64,pauseText[4],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[4],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),72,pauseText[5],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[5],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),80,pauseText[6],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[6],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),88,pauseText[7],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[7],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),96,pauseText[8],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[8],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),104,pauseText[9],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[9],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),112,pauseText[10],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[10],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),120,pauseText[11],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[11],"clear")
+ gui.text(51+(pauseLevel>0 and 16 or 0),128,pauseText[12],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[12],"clear")
+ gui.text(42+(pauseLevel>0 and 16 or 0),40+(selector*8),">","#000","clear")
+ end
+ if(pauseLevel>0) then gui.text(42,32+(pauseLevel*8)," > ","clear",pauseColor[pauseLevel]) end
+
+ if(AND(memory.readbyte(controller2Add),0x01) == 0x01) then --right
+  if(ramwatch) then
+   selector = selector+1
+  else
+   if(pauseLevel == 0) then pauseLevel=selector+1 end
+    selector=0
+   if(pauseLevel == 5) then ramwatch = true end
+  end
  end
  
- if(AND(memory.readbyte(controllerAdd),0x01) == 0x01 or AND(memory.readbyte(controller2Add),0x04) == 0x04) then
- selector = selector+1
- if(selector == 12) then selector=0 end
+ if(AND(memory.readbyte(controller2Add),0x02) == 0x02) then --left
+   if(ramwatch) then
+    selector = selector-1
+   else
+    selector = pauseLevel-1
+    if (selector == -1) then selector = 0 end
+    pauseLevel = 0
+  end
  end
  
- if(AND(memory.readbyte(controller2Add),0x20) == 0x20) then
- if(selector==0) then recoloring = false end
- if(selector==1) then newhud = false end
- if(selector==2) then memory.writebyte(hpAdd, 0x2F) end
- if(selector==3) then memory.writebyte(livesAdd, 0x04) end
- if(selector==4) then memory.writebyte(powerupAdd, 0xFF) end
- if(selector==5) then memory.writebyte(bodyAdd, 0x00) end
- if(selector==6) then memory.writebyte(usesAdd, 0x00) end
- if(selector==11) then metaknight = false end
+ if(AND(memory.readbyte(controller2Add),0x04) == 0x04) then --down
+  if(ramwatch) then
+   selector = selector + 8
+   if(selector>127) then
+    selector = selector%128
+    ramoffset = ramoffset + 128
+   end
+   if(ramoffset>65408) then ramoffset = 0 end
+  else
+   selector = selector+1
+   if(selector == #(menus[pauseLevel])) then selector=0 end
+  end
+ end
+ 
+ if(AND(memory.readbyte(controller2Add),0x08) == 0x08) then --up
+  if(ramwatch) then
+   selector = selector - 8
+   if(selector<0) then
+    selector = selector%128
+    ramoffset = ramoffset - 128
+   end
+   if(ramoffset<0) then ramoffset = 65408 end
+  else
+   selector = selector-1
+   if(selector == -1) then selector=#(menus[pauseLevel]) - 1 end
+  end
+ end
+ 
+ if(AND(memory.readbyte(controller2Add),0x20) == 0x20) then --select
+ selector=0
+ pauseLevel=0
+ ramwatch = false
  end
  
  if(AND(memory.readbyte(controller2Add),0x40) == 0x40) then
@@ -751,6 +855,7 @@ return nil
 end
 
 function knightmare()
+ if(memory.readbyte(groundedAdd) == 0x04) then jumpsLeft = 4 end
  memory.writebyte(bodyAdd,0x03) --sword state
  memory.writebyte(powerupAdd,0xFF) --normal powerup, stops other copy abilities
  memory.writebyte(body,col.rose)
@@ -763,12 +868,35 @@ function knightmare()
  memory.writebyte(feet4,col.purple)
  memory.writebyte(line4,col.black)
  --meta knight falls faster, but can recover with floating much quicker, and can hover with aerial attacks
- if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and not (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0x02) end
- if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0xFE) end
- if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (AND(memory.readbyte(controllerAdd),0x40) == 0x40)) then memory.writebyte(yveloAdd,0x00) end
+ if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and not (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0x02) end --sink
+ if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0xFE) end --float
+ if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (memory.readbyte(powerAdd) == 0x0C)) then memory.writebyte(yveloAdd,(-1*jumpsLeft)) jumpsLeft=jumpsLeft-1 end --hover
+ --(AND(memory.readbyte(controllerAdd),0x40) == 0x40) --FD is max height that feels ok, 00 was meant for when it registered once per button press instead of once per action
+ -- also feels much better with weighted limited jumps
  --draws a mask onto his face poorly
  gui.box(memory.readbyte(xposAdd)+10,memory.readbyte(yposAdd)+8,memory.readbyte(xposAdd)+16,memory.readbyte(yposAdd)+6,"P0F") --P03 --P20
  end
+ 
+function dynamic()
+ menus[1][1] = "Health: "..((memory.readbyte(hpAdd)==0xFF) and "0" or ((memory.readbyte(hpAdd)==0x37) and "INF" or ((memory.readbyte(hpAdd)+0x01)/0x08)))
+ menus[1][2] = "Lives: "..(memory.readbyte(livesAdd))
+ menus[2][1] = "Recolors: "..(recoloring and "ON" or "off")
+ menus[2][2] = "LUA-Based Hud: "..(newhud and "ON" or "off")
+ menus[2][3] = "Meta Knightmare: "..(metaknight and "ON" or "off")
+ menus[3][1] = "Powerup: "..(names[memory.readbyte(powerupAdd)][1])
+ menus[3][2] = "Powerup State: "..(bodies[memory.readbyte(bodyAdd)])
+ menus[3][3] = "Powerup Uses: "..(memory.readbyte(usesAdd))
+end
+
+function ramLine(l)
+ line = {}
+ line = memory.readbyterange(ramoffset+(l*8),8)
+ s=string.upper(string.format("%4x",ramoffset+(l*8)))..": "
+ for i=1,8,1 do
+  s = s..string.upper(string.format("%2x",string.byte(line,i)))
+ end
+ return s
+end
 
 --delays for n amount of time.
 function sleep(n,str)

@@ -875,11 +875,11 @@ function dynamic()
 end
 
 function ramLine(l)
- line = {}
- line = memory.readbyterange(ramoffset+(l*8),8)
+ rline = {}
+ rline = memory.readbyterange(ramoffset+(l*8),8)
  s=string.upper(string.format("%4x",ramoffset+(l*8)))..": "
  for i=1,8,1 do
-  s = s..string.upper(string.format("%2x",string.byte(line,i)))
+  s = s..string.upper(string.format("%2x",string.byte(rline,i)))
  end
  return s
 end

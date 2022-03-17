@@ -146,41 +146,77 @@ col.ice = 0x3B
 col.cyan = 0x3C
 col.iron = 0x3D
 
-names = {}
-names[0x00] = {"Fire","Kirby can breathe\nfire! Enemies\nbeware, or you're\ngonna get burned!"}
-names[0x01] = {"Spark","Kirby can create\nfireworks-like\nsparks from his\nbody! This is a\ngreat defense!"}
-names[0x02] = {"Cutter","Kirby can throw a\nseries of cutters\nthat return like\nboomerangs!"}
-names[0x03] = {"Sword","Use the sword to\ndefeat enemies!\nIf you attack in\nmidair, Kirby will\nspin and slash!"}
-names[0x04] = {"Fireball","Kirby can turn\ninto a flying fire-\nball! Jump and\nattack in a flash\nof fire!"}
-names[0x05] = {"Laser","Kirby can fire a\nlaser beam! This\nbeam will bounce\noff slopes,so try\nit in many places!"}
-names[0x06] = {"Mike","Kirby can sing his\nfavorite song three\ntimes! I wonder\nwhy that song hurts\nenemies..."}
-names[0x07] = {"Wheel","Kirby turns into a\nwheel and can move\nat super speed! But\nwatch out for obstacles\nand excess speed!"}
-names[0x08] = {"Hammer","This weapon is\nvery powerful. Use\nit on stubborn bad\nguys to clear your\npath!"}
-names[0x09] = {"Parasol","Open your parasol\nand take a nice\nwalk! Do you think\nthis might have\nother uses, too?"}
-names[0x0A] = {"Sleep","...Please...\n...Let me sleep...\n...A little more...\n...Please..."}
-names[0x0B] = {"Needle","Lots of needles,\njust like a\nporcupine's, come\nout of Kirby! It's\na great defense!"}
-names[0x0C] = {"Ice","Kirby can freeze\nenemies with his\n cold breath! He\ncan then throw\nthem into others!"}
-names[0x0D] = {"Freeze","Kirby can create a\nshield to freeze\nenemies! He can\nthen knock away\nthe frozen blocks!"}
-names[0x0E] = {"Hi-Jump","Kirby can jump many\ntimes higher than\nusual! Jump and\ndive attack to\nbeat the enemy!"}
-names[0x0F] = {"Beam","Kirby fires a beam\nlike that used by\nsome enemies!\nThis is an easy\nweapon to use!"}
-names[0x10] = {"Stone","Kirby's body turns\ninto a solid rock!\nIn this form, he\ncannot be hurt by\nenemy attacks!"}
-names[0x11] = {"Ball","Kirby can roll into\na smooth ball! If\nyou hold the A\nButton,he will\njump higher!"}
-names[0x12] = {"Tornado","Kirby can now spin\nand bump away his\nfoes! Hold the B\nButton to spin\ninto the air!"}
-names[0x13] = {"Crash","This power will\ndefeat all enemies\non the screen, but\nyou can use it\nonly once!"}
-names[0x14] = {"Light","Dark areas can be\nspooky! This lets\nKirby set off fire-\nworks! It works\nonly in the dark!"}
-names[0x15] = {"Back Drop","Kirby can use a\npowerful wrestling\ntechnique, the back\ndrop, to defeat\nhis opponents!"}
-names[0x16] = {"Throw","Kirby can grab an\nenemy and toss it\naway, like a star!\nUse an enemy\nto beat others!"}
-names[0x17] = {"UFO","Kirby can grab an\nenemy and toss it\naway, like a star!\nUse an enemy\nto beat others!"}
-names[0x18] = {"Star Rod","Make the final\neffort! Shoot the\nstar to defeat the\nfinal enemy!"}
-names[0x19] = {"Bye Bye","Congratulations!"}
-names[0x1A] = {"Normal[Crash]","Deletes save file\nwhen attempting to\nunpause."}
-names[0x1B] = {"Custom 1[Crash]","Deletes save file\nwhen attempting to\nunause."}
-names[0x1C] = {"Custom 2[Crash]","Deletes save file\nwhen attempting to\nunpause."}
-names[0x1D] = {"Custom 3[Crash]","Deletes save file\nwhen attempting to\nunpause."}
-names[0x1E] = {"Custom 4[Crash]","Deletes save file\nwhen attempting to\nunpause."}
-names[0x1F] = {"Custom 5[Crash]","Deletes save file\nwhen attempting to\nunpause."}
-names[0xFF] = {"Normal","Hit the Down Arrow\nwhen Kirby has an\nenemy in his mouth\nto copy the enemy's\nspecial ability!"}
-names[0x100] = {"Meta Knight","Use the Galaxia\nto battle your way\nthrough a more\nchallenging game!"}
+powerups = {}
+powerups[0x00][1] = {"Fire","Kirby can breathe\nfire! Enemies\nbeware, or you're\ngonna get burned!"}
+powerups[0x00][2] = {col.carrot,col.scarlet,col.black,col.chartreuse,col.carrot,col.red,col.carrot,col.scarlet,col.black} --based on modern kirby fire powerups
+powerups[0x01][1] = {"Spark","Kirby can create\nfireworks-like\nsparks from his\nbody! This is a\ngreat defense!"}
+powerups[0x01][2] = {col.chartreuse,col.springgreen,col.leaf,col.chartreuse,col.springgreen,col.leaf,col.chartreuse,col.springgreen,col.leaf} --based on plasma from modern kirby games
+powerups[0x02][1] = {"Cutter","Kirby can throw a\nseries of cutters\nthat return like\nboomerangs!"}
+powerups[0x02][2] = {col.rose,col.yellow,col.black,col.white,col.iron,col.yellow,col.rose,col.yellow,col.black} --projectile coloring based on modern cutter kirby's
+powerups[0x03][1] = {"Sword","Use the sword to\ndefeat enemies!\nIf you attack in\nmidair, Kirby will\nspin and slash!"}
+powerups[0x03][2] = {col.silver,col.snow,col.black,col.snow,col.silver,col.darkblue,col.lightpink,col.salmon,col.black} --based on modern kirby sword powerups
+powerups[0x04][1] = {"Fireball","Kirby can turn\ninto a flying fire-\nball! Jump and\nattack in a flash\nof fire!"}
+powerups[0x04][2] = {col.beige,col.salmon,col.wine,col.white,col.carrot,col.blush,col.beige,col.salmon,col.wine} --custom
+powerups[0x05][1] = {"Laser","Kirby can fire a\nlaser beam! This\nbeam will bounce\noff slopes,so try\nit in many places!"}
+powerups[0x05][2] = {col.marigold,col.yellow,col.gold,col.canary,col.gold,col.yellow,col.marigold,col.orange,col.black} --custom
+powerups[0x06][1] = {"Mike","Kirby can sing his\nfavorite song three\ntimes! I wonder\nwhy that song hurts\nenemies..."}
+powerups[0x06][2] = {col.white,col.blue,col.black,col.white,col.blue,col.black,col.lime,col.green,col.forest} --based off of mike wazowski
+powerups[0x07][1] = {"Wheel","Kirby turns into a\nwheel and can move\nat super speed! But\nwatch out for obstacles\nand excess speed!"}
+powerups[0x07][2] = {col.silver,col.stone,col.black,col.silver,col.stone,col.black,col.silver,col.stone,col.black} --custom, looks like a wheel
+powerups[0x08][1] = {"Hammer","This weapon is\nvery powerful. Use\nit on stubborn bad\nguys to clear your\npath!"}
+powerups[0x08][2] = {col.rose,col.blush,col.black,col.yellow,col.orange,col.brown,col.rose,col.scarlet,col.black} --based off his smash brothers and modern hammer colors
+powerups[0x09][1] = {"Parasol","Open your parasol\nand take a nice\nwalk! Do you think\nthis might have\nother uses, too?"}
+powerups[0x09][2] = {col.white,col.snow,col.red,col.white,col.canary,col.scarlet,col.lightpink,col.pink,col.black} --based off of the parasol seen in the manual and in modern games
+powerups[0x0A][1] = {"Sleep","...Please...\n...Let me sleep...\n...A little more...\n...Please..."}
+powerups[0x0A][2] = {col.white,col.snow,col.red,col.white,col.canary,col.scarlet,col.white,col.emerald,col.black} --based off of the color palette of noddy in-game
+powerups[0x0B][1] = {"Needle","Lots of needles,\njust like a\nporcupine's, come\nout of Kirby! It's\na great defense!"}
+powerups[0x0B][2] = {col.yellow,col.gold,col.brown,col.marigold,col.yellow,col.black,col.yellow,col.gold,col.brown} --custom
+powerups[0x0C][1] = {"Ice","Kirby can freeze\nenemies with his\n cold breath! He\ncan then throw\nthem into others!"}
+powerups[0x0C][2] = {col.white,col.cerulean,col.blue,col.beige,col.salmon,col.black,col.white,col.cerulean,col.blue} --unchanged
+powerups[0x0D][1] = {"Freeze","Kirby can create a\nshield to freeze\nenemies! He can\nthen knock away\nthe frozen blocks!"}
+powerups[0x0D][2] = {col.skyblue,col.lightblue,col.darkblue,col.beige,col.salmon,col.black,col.skyblue,col.lightblue,col.darkblue} --based off of modern ice kirby powerups
+powerups[0x0E][1] = {"Hi-Jump","Kirby can jump many\ntimes higher than\nusual! Jump and\ndive attack to\nbeat the enemy!"}
+powerups[0x0E][2] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.pink,col.springgreen,col.black} --based off of cherry spraypaint from amazing mirror
+powerups[0x0F][1] = {"Beam","Kirby fires a beam\nlike that used by\nsome enemies!\nThis is an easy\nweapon to use!"}
+powerups[0x0F][2] = {col.yellow,col.gold,col.black,col.marigold,col.yellow,col.black,col.yellow,col.gold,col.black} --based off of beam powerup in later games / keeby
+powerups[0x10][1] = {"Stone","Kirby's body turns\ninto a solid rock!\nIn this form, he\ncannot be hurt by\nenemy attacks!"}
+powerups[0x10][2] = {col.beige,col.salmon,col.black,col.white,col.silver,col.gray,col.gray,col.carrot,col.black} --based off of carbon spraypaint from amazing mirror
+powerups[0x11][1] = {"Ball","Kirby can roll into\na smooth ball! If\nyou hold the A\nButton,he will\njump higher!"}
+powerups[0x11][2] = {col.beige,col.salmon,col.black,col.marigold,col.yellow,col.gold,col.lightblue,col.slate,col.black} --based off the first ball of within a deep forest
+powerups[0x12][1] = {"Tornado","Kirby can now spin\nand bump away his\nfoes! Hold the B\nButton to spin\ninto the air!"}
+powerups[0x12][2] = {col.mauve,col.royalpurple,col.black,col.snow,col.silver,col.gray,col.mauve,col.royalpurple,col.black} --custom
+powerups[0x13][1] = {"Crash","This power will\ndefeat all enemies\non the screen, but\nyou can use it\nonly once!"}
+powerups[0x13][2] = {col.carrot,col.scarlet,col.black,col.beige,col.salmon,col.black,col.carrot,col.scarlet,col.black} --custom
+powerups[0x13][3] = {col.white,col.beige,col.wine,col.beige,col.salmon,col.black,col.white,col.beige,col.wine}
+powerups[0x14][1] = {"Light","Dark areas can be\nspooky! This lets\nKirby set off fire-\nworks! It works\nonly in the dark!"}
+powerups[0x14][2] = {col.chartreuse,col.beige,col.gold,col.chartreuse,col.beige,col.gold,col.chartreuse,col.beige,col.gold} --it doesn't flicker as the palette address can only be hooked onto when the game writes to it, like with crash
+powerups[0x14][3] = {col.chartreuse,col.beige,col.gold,col.chartreuse,col.beige,col.gold,col.white,col.stone,col.black} --one is custom and one is based on gameboy kirby 
+powerups[0x15][1] = {"Back Drop","Kirby can use a\npowerful wrestling\ntechnique, the back\ndrop, to defeat\nhis opponents!"}
+powerups[0x15][2] = {col.beige,col.scarlet,col.black,col.white,col.canary,col.orange,col.beige,col.scarlet,col.black} --custom
+powerups[0x16][1] = {"Throw","Kirby can grab an\nenemy and toss it\naway, like a star!\nUse an enemy\nto beat others!"}
+powerups[0x16][2] = {col.lavender,col.blush,col.hotpink,col.white,col.blush,col.hotpink,col.pink,col.magenta,col.violet} --based on grape kirby from the amazing mirror
+powerups[0x17][1] = {"UFO","Kirby can grab an\nenemy and toss it\naway, like a star!\nUse an enemy\nto beat others!"}
+powerups[0x17][2] = {col.beige,col.scarlet,col.black,col.chartreuse,col.mint,col.lime,col.snow,col.royalpurple,col.slate} --custom
+powerups[0x18][1] = {"Star Rod","Make the final\neffort! Shoot the\nstar to defeat the\nfinal enemy!"}
+powerups[0x18][2] = {col.rose,col.blush,col.black,col.canary,col.beige,col.red,col.rose,col.blush,col.black} --based off promo and modern depictions of the star rod
+powerups[0x19][1] = {"Bye Bye","Congratulations!"}
+powerups[0x19][2] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.rose,col.blush,col.black} --normal kirby
+powerups[0x1A][1] = {"Normal[Crash]","Deletes save file\nwhen attempting to\nunpause."}
+powerups[0x1A][2] = {col.mint,col.springgreen,col.darkblue,col.ice,col.white,col.blue,col.periwinkle,col.springgreen,col.slate} --just an aesthetically pleasing kirby
+powerups[0x1B][1] = {"Custom 1[Crash]","Deletes save file\nwhen attempting to\nunpause."}
+powerups[0x1C][1] = {"Custom 2[Crash]","Deletes save file\nwhen attempting to\nunpause."}
+powerups[0x1D][1] = {"Custom 3[Crash]","Deletes save file\nwhen attempting to\nunpause."}
+powerups[0x1E][1] = {"Custom 4[Crash]","Deletes save file\nwhen attempting to\nunpause."}
+powerups[0x1F][1] = {"Custom 5[Crash]","Deletes save file\nwhen attempting to\nunpause."}
+powerups[0xFF][1] = {"Normal","Hit the Down Arrow\nwhen Kirby has an\nenemy in his mouth\nto copy the enemy's\nspecial ability!"}
+powerups[0xFF][0] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.rose,col.blush,col.black} --default
+powerups[0xFF][2] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.snow,col.turquoise,col.royalblue} --2 is "splash", 8 is actual splashing
+powerups[0xFF][8] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.skyblue,col.turquoise,col.royalblue} --due to how the game calls colors it'll usually only get called one time in the room unless you pause, rather than toggle
+powerups[0xFF][3] = {col.rose,col.blush,col.black,col.marigold,col.carrot,col.gold,col.lavender,col.darkblue,col.black} --meta knight
+powerups[0xFF][4] = {col.rose,col.blush,col.black,col.marigold,col.carrot,col.crimson,col.lightblue,col.marigold,col.black} --king dedede
+powerups[0xFF][5] = {col.beige,col.salmon,col.black,col.white,col.canary,col.orange,col.beige,col.salmon,col.black} --default powerup color, as it is otherwise unused
+powerups[0x100][1] = {"Meta Knight","Use the Galaxia\nto battle your way\nthrough a more\nchallenging game!"} --custom for meta knightmare mode
+powerups[0x100][2] = {col.rose,col.blush,col.black,col.marigold,col.carrot,col.gold,col.white,col.purple,col.black} --nes metaknight coloring
 
 bodies = {}
 bodies[0x00] = "normal"
@@ -240,374 +276,8 @@ bg3 = 0x0185
 ]]--
 
 function recolor()
-pwr = names[memory.readbyte(powerupAdd)][1]
-if(pwr == nil) then pwr = "kerbe" end
-
---based on modern kirby fire powerups
-if(pwr == "Fire") then
-	memory.writebyte(body,col.carrot)
-	memory.writebyte(feet,col.scarlet)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.chartreuse)
-	memory.writebyte(feet2,col.carrot)
-	memory.writebyte(line2,col.red)
-	memory.writebyte(body4,col.carrot)
-	memory.writebyte(feet4,col.scarlet)
-	memory.writebyte(line4,col.black)
---based on plasma from modern kirby games
-elseif(pwr == "Spark") then
-	memory.writebyte(body,col.chartreuse)
-	memory.writebyte(feet,col.springgreen)
-	memory.writebyte(line,col.leaf)
-	memory.writebyte(body2,col.chartreuse)
-	memory.writebyte(feet2,col.springgreen)
-	memory.writebyte(line2,col.leaf)
-	memory.writebyte(body4,col.chartreuse)
-	memory.writebyte(feet4,col.springgreen)
-	memory.writebyte(line4,col.leaf)
---projectile coloring based on modern cutter kirby's
-elseif(pwr == "Cutter") then
-	memory.writebyte(body,col.rose)
-	memory.writebyte(feet,col.yellow)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.iron)
-	memory.writebyte(line2,col.yellow)
-	memory.writebyte(body4,col.rose)
-	memory.writebyte(feet4,col.yellow)
-	memory.writebyte(line4,col.black)
---based on modern kirby sword powerups
-elseif(pwr == "Sword") then
-	memory.writebyte(body,col.silver)
-	memory.writebyte(feet,col.snow)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.snow)
-	memory.writebyte(feet2,col.silver)
-	memory.writebyte(line2,col.darkblue)
-	memory.writebyte(body4,col.lightpink)
-	memory.writebyte(feet4,col.salmon)
-	memory.writebyte(line4,col.black)
---custom
-elseif(pwr == "Fireball") then
-	memory.writebyte(body,col.beige)
-	memory.writebyte(feet,col.salmon)
-	memory.writebyte(line,col.wine)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.carrot)
-	memory.writebyte(line2,col.blush)
-	memory.writebyte(body4,col.beige)
-	memory.writebyte(feet4,col.salmon)
-	memory.writebyte(line4,col.wine)
---custom
-elseif(pwr == "Laser") then
-	memory.writebyte(body,col.marigold)
-	memory.writebyte(feet,col.yellow)
-	memory.writebyte(line,col.gold)
-	memory.writebyte(body2,col.canary)
-	memory.writebyte(feet2,col.gold)
-	memory.writebyte(line2,col.yellow)
-	memory.writebyte(body4,col.marigold)
-	memory.writebyte(feet4,col.orange)
-	memory.writebyte(line4,col.black)
---based off of mike wazowski
-elseif(pwr == "Mike") then
-	memory.writebyte(body,col.white)
-	memory.writebyte(feet,col.blue)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.blue)
-	memory.writebyte(line2,col.black)
-	memory.writebyte(body4,col.lime)
-	memory.writebyte(feet4,col.green)
-	memory.writebyte(line4,col.forest)
---custom, looks like a wheel
-elseif(pwr == "Wheel") then
-	memory.writebyte(body,col.silver)
-	memory.writebyte(feet,col.stone)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.silver)
-	memory.writebyte(feet2,col.stone)
-	memory.writebyte(line2,col.black)
-	memory.writebyte(body4,col.silver)
-	memory.writebyte(feet4,col.stone)
-	memory.writebyte(line4,col.black)
---based off his smash brothers and modern hammer colors
-elseif(pwr == "Hammer") then
-	memory.writebyte(body,col.rose)
-	memory.writebyte(feet,col.blush)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.yellow)
-	memory.writebyte(feet2,col.orange)
-	memory.writebyte(line2,col.brown)
-	memory.writebyte(body4,col.rose)
-	memory.writebyte(feet4,col.scarlet)
-	memory.writebyte(line4,col.black)
---based off of the parasol seen in the manual and in modern games
-elseif(pwr == "Parasol") then
-	memory.writebyte(body,col.white)
-	memory.writebyte(feet,col.snow)
-	memory.writebyte(line,col.red)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.canary)
-	memory.writebyte(line2,col.scarlet)
-	memory.writebyte(body4,col.lightpink)
-	memory.writebyte(feet4,col.pink)
-	memory.writebyte(line4,col.black)
---based off of the color palette of noddy in-game
-elseif(pwr == "Sleep") then
-	memory.writebyte(body,col.white)
-	memory.writebyte(feet,col.snow)
-	memory.writebyte(line,col.red)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.canary)
-	memory.writebyte(line2,col.scarlet)
-	memory.writebyte(body4,col.white)
-	memory.writebyte(feet4,col.emerald)
-	memory.writebyte(line4,col.black)
---custom
-elseif(pwr == "Needle") then
-	memory.writebyte(body,col.yellow)
-	memory.writebyte(feet,col.gold)
-	memory.writebyte(line,col.brown)
-	memory.writebyte(body2,col.marigold)
-	memory.writebyte(feet2,col.yellow)
-	memory.writebyte(line2,col.black)
-	memory.writebyte(body4,col.yellow)
-	memory.writebyte(feet4,col.gold)
-	memory.writebyte(line4,col.brown)
---unchanged
-elseif(pwr == "Ice") then
-	memory.writebyte(body,col.white)
-	memory.writebyte(feet,col.cerulean)
-	memory.writebyte(line,col.blue)
-	memory.writebyte(body2,col.beige)
-	memory.writebyte(feet2,col.salmon)
-	memory.writebyte(line2,col.black)
-	memory.writebyte(body4,col.white)
-	memory.writebyte(feet4,col.cerulean)
-	memory.writebyte(line4,col.blue)
--- based off of modern ice kirby powerups
-elseif(pwr == "Freeze") then
-	memory.writebyte(body,col.skyblue)
-	memory.writebyte(feet,col.lightblue)
-	memory.writebyte(line,col.darkblue)
-	memory.writebyte(body2,col.beige)
-	memory.writebyte(feet2,col.salmon)
-	memory.writebyte(line2,col.black)
-	memory.writebyte(body4,col.skyblue)
-	memory.writebyte(feet4,col.lightblue)
-	memory.writebyte(line4,col.darkblue)
--- based off of cherry spraypaint from amazing mirror
-elseif(pwr == "Hi-Jump") then
-	memory.writebyte(body,col.rose)
-	memory.writebyte(feet,col.blush)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.canary)
-	memory.writebyte(line2,col.orange)
-	memory.writebyte(body4,col.pink)
-	memory.writebyte(feet4,col.springgreen)
-	memory.writebyte(line4,col.black)
--- based off of beam powerup in later games / keeby
-elseif(pwr == "Beam") then
-	memory.writebyte(body,col.yellow)
-	memory.writebyte(feet,col.gold)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.marigold)
-	memory.writebyte(feet2,col.yellow)
-	memory.writebyte(line2,col.black)
-	memory.writebyte(body4,col.yellow)
-	memory.writebyte(feet4,col.gold)
-	memory.writebyte(line4,col.black)
--- based off of carbon spraypaint from amazing mirror
-elseif(pwr == "Stone") then
-	memory.writebyte(body,col.beige)
-	memory.writebyte(feet,col.salmon)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.silver)
-	memory.writebyte(line2,col.gray)
-	memory.writebyte(body4,col.gray)
-	memory.writebyte(feet4,col.carrot)
-	memory.writebyte(line4,col.black)
---based off the first ball of within a deep forest
-elseif(pwr == "Ball") then
-	memory.writebyte(body,col.beige)
-	memory.writebyte(feet,col.salmon)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.marigold)
-	memory.writebyte(feet2,col.yellow)
-	memory.writebyte(line2,col.gold)
-	memory.writebyte(body4,col.lightblue)
-	memory.writebyte(feet4,col.slate)
-	memory.writebyte(line4,col.black)
---custom
-elseif(pwr == "Tornado") then
-	memory.writebyte(body,col.mauve)
-	memory.writebyte(feet,col.royalpurple)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.snow)
-	memory.writebyte(feet2,col.silver)
-	memory.writebyte(line2,col.gray)
-	memory.writebyte(body4,col.mauve)
-	memory.writebyte(feet4,col.royalpurple)
-	memory.writebyte(line4,col.black)
---custom
-elseif(pwr == "Crash") then
-	flicker = memory.readbyte(hudFlickerAdd)
-	if(flicker == 123 or flicker == 124) then
-		memory.writebyte(body,col.carrot)
-		memory.writebyte(feet,col.scarlet)
-		memory.writebyte(line,col.black)
-		memory.writebyte(body2,col.beige)
-		memory.writebyte(feet2,col.salmon)
-		memory.writebyte(line2,col.black)
-		memory.writebyte(body4,col.carrot)
-		memory.writebyte(feet4,col.scarlet)
-		memory.writebyte(line4,col.black)
-	else
-		memory.writebyte(body,col.white)
-		memory.writebyte(feet,col.beige)
-		memory.writebyte(line,col.wine)
-		memory.writebyte(body2,col.beige)
-		memory.writebyte(feet2,col.salmon)
-		memory.writebyte(line2,col.black)
-		memory.writebyte(body4,col.white)
-		memory.writebyte(feet4,col.beige)
-		memory.writebyte(line4,col.wine)
-	end
---it doesn't flicker as the palette address can only be hooked onto when the game writes to it, like with crash
--- one is custom and one is based on gameboy kirby 
-elseif(pwr == "Light") then
-	flicker = memory.readbyte(hudFlickerAdd)
-	if(flicker == 123 or flicker == 124) then
-		memory.writebyte(body,col.chartreuse)
-		memory.writebyte(feet,col.beige)
-		memory.writebyte(line,col.gold)
-		memory.writebyte(body2,col.chartreuse)
-		memory.writebyte(feet2,col.beige)
-		memory.writebyte(line2,col.gold)
-		memory.writebyte(body4,col.chartreuse)
-		memory.writebyte(feet4,col.beige)
-		memory.writebyte(line4,col.gold)
-	else
-		memory.writebyte(body,col.chartreuse)
-		memory.writebyte(feet,col.beige)
-		memory.writebyte(line,col.gold)
-		memory.writebyte(body2,col.chartreuse)
-		memory.writebyte(feet2,col.beige)
-		memory.writebyte(line2,col.gold)
-		memory.writebyte(body4,col.white)
-		memory.writebyte(feet4,col.stone)
-		memory.writebyte(line4,col.black)
-	end
---custom
-elseif(pwr == "Backdrop") then
-	memory.writebyte(body,col.beige)
-	memory.writebyte(feet,col.scarlet)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.canary)
-	memory.writebyte(line2,col.orange)
-	memory.writebyte(body4,col.beige)
-	memory.writebyte(feet4,col.scarlet)
-	memory.writebyte(line4,col.black)
---based on grape kirby from the amazing mirror
-elseif(pwr == "Throw") then
-	memory.writebyte(body,col.lavender)
-	memory.writebyte(feet,col.blush)
-	memory.writebyte(line,col.hotpink)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.blush)
-	memory.writebyte(line2,col.hotpink)
-	memory.writebyte(body4,col.pink)
-	memory.writebyte(feet4,col.magenta)
-	memory.writebyte(line4,col.violet)
---custom
-elseif(pwr == "UFO") then
-	memory.writebyte(body,col.beige)
-	memory.writebyte(feet,col.scarlet)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.chartreuse)
-	memory.writebyte(feet2,col.mint)
-	memory.writebyte(line2,col.lime)
-	memory.writebyte(body4,col.snow)
-	memory.writebyte(feet4,col.royalpurple)
-	memory.writebyte(line4,col.slate)
---based off promo and modern depictions of the star rod
-elseif(pwr == "Star Rod") then
-	memory.writebyte(body,col.rose)
-	memory.writebyte(feet,col.blush)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.canary)
-	memory.writebyte(feet2,col.beige)
-	memory.writebyte(line2,col.red)
-	memory.writebyte(body4,col.rose)
-	memory.writebyte(feet4,col.blush)
-	memory.writebyte(line4,col.black)
---normal kirby
-elseif(pwr == "Bye Bye") then
-		memory.writebyte(body,col.rose)
-		memory.writebyte(feet,col.blush)
-		memory.writebyte(line,col.black)
-		memory.writebyte(body2,col.white)
-		memory.writebyte(feet2,col.canary)
-		memory.writebyte(line2,col.orange)
-		memory.writebyte(body4,col.rose)
-		memory.writebyte(feet4,col.blush)
-		memory.writebyte(line4,col.black)
---just an aesthetically pleasing kirby
-elseif(pwr == "Custom 1[Crash]") then
-	memory.writebyte(body,col.mint)
-	memory.writebyte(feet,col.springgreen)
-	memory.writebyte(line,col.darkblue)
-	memory.writebyte(body2,col.ice)
-	memory.writebyte(feet2,col.white)
-	memory.writebyte(line2,col.blue)
-	memory.writebyte(body4,col.periwinkle)
-	memory.writebyte(feet4,col.springgreen)
-	memory.writebyte(line4,col.slate)
---unchanged, although flashing with a copyable enemy has been overwritten. several hidden colors are also accessable via a glitch
-elseif(pwr == "Normal") then
-	splash = memory.readbyte(powerAdd)
-	states = memory.readbyte(statesAdd)
-	if(states ~= 7 and splash ~= 0) then --7 is dropping powerup
-		if(splash == 2) then -- splash
-		memory.writebyte(body,col.rose)
-		memory.writebyte(feet,col.blush)
-		memory.writebyte(line,col.black)
-		memory.writebyte(body2,col.white)
-		memory.writebyte(feet2,col.canary)
-		memory.writebyte(line2,col.orange)
-		memory.writebyte(body4,col.snow)
-		memory.writebyte(feet4,col.turquoise)
-		memory.writebyte(line4,col.royalblue)
-		if(states == 8) then memory.writebyte(body4,col.skyblue) end --8 is splashing
-		--due to how the game calls colors it'll usually only get called one time in the room unless you pause, rather than toggle
-		end
-		if(splash == 3) then --meta knight
-		memory.writebyte(body,col.rose)
-		memory.writebyte(feet,col.blush)
-		memory.writebyte(line,col.black)
-		memory.writebyte(body2,col.marigold)
-		memory.writebyte(feet2,col.carrot)
-		memory.writebyte(line2,col.gold)
-		memory.writebyte(body4,col.lavender)
-		memory.writebyte(feet4,col.darkblue)
-		memory.writebyte(line4,col.black)
-		end
-		if(splash == 4) then --dedede
-		memory.writebyte(body,col.rose)
-		memory.writebyte(feet,col.blush)
-		memory.writebyte(line,col.black)
-		memory.writebyte(body2,col.marigold)
-		memory.writebyte(feet2,col.carrot)
-		memory.writebyte(line2,col.crimson)
-		memory.writebyte(body4,col.lightblue)
-		memory.writebyte(feet4,col.marigold)
-		memory.writebyte(line4,col.black)
-		end
-		if(splash == 5) then --default powerup color, as it is otherwise unused
+pwr = memory.readbyte(powerupAdd)
+	if(#powerups[pwr] == 1)
 		memory.writebyte(body,col.beige)
 		memory.writebyte(feet,col.salmon)
 		memory.writebyte(line,col.black)
@@ -617,30 +287,31 @@ elseif(pwr == "Normal") then
 		memory.writebyte(body4,col.beige)
 		memory.writebyte(feet4,col.salmon)
 		memory.writebyte(line4,col.black)
-		end
-	else --default
-		memory.writebyte(body,col.rose)
-		memory.writebyte(feet,col.blush)
-		memory.writebyte(line,col.black)
-		memory.writebyte(body2,col.white)
-		memory.writebyte(feet2,col.canary)
-		memory.writebyte(line2,col.orange)
-		memory.writebyte(body4,col.rose)
-		memory.writebyte(feet4,col.blush)
-		memory.writebyte(line4,col.black)
 	end
-else --default powerup, this specifically should probably never get called unless you have one of the weird ones like Goodbye
-	memory.writebyte(body,col.beige)
-	memory.writebyte(feet,col.salmon)
-	memory.writebyte(line,col.black)
-	memory.writebyte(body2,col.white)
-	memory.writebyte(feet2,col.canary)
-	memory.writebyte(line2,col.orange)
-	memory.writebyte(body4,col.beige)
-	memory.writebyte(feet4,col.salmon)
-	memory.writebyte(line4,col.black)
-end
-return nil
+	if(#powerups[pwr] == 2)
+		memory.writebyte(body,powerups[pwr][2][1])
+		memory.writebyte(feet,powerups[pwr][2][2])
+		memory.writebyte(line,powerups[pwr][2][3])
+		memory.writebyte(body2,powerups[pwr][2][4])
+		memory.writebyte(feet2,powerups[pwr][2][5])
+		memory.writebyte(line2,powerups[pwr][2][6])
+		memory.writebyte(body4,powerups[pwr][2][7])
+		memory.writebyte(feet4,powerups[pwr][2][8])
+		memory.writebyte(line4,powerups[pwr][2][9])
+	end
+	if(#powerups[pwr] == 3)
+		flicker = memory.readbyte(hudFlickerAdd)
+		
+		memory.writebyte(body,powerups[pwr][2][1])
+		memory.writebyte(feet,powerups[pwr][2][2])
+		memory.writebyte(line,powerups[pwr][2][3])
+		memory.writebyte(body2,powerups[pwr][2][4])
+		memory.writebyte(feet2,powerups[pwr][2][5])
+		memory.writebyte(line2,powerups[pwr][2][6])
+		memory.writebyte(body4,powerups[pwr][2][7])
+		memory.writebyte(feet4,powerups[pwr][2][8])
+		memory.writebyte(line4,powerups[pwr][2][9])
+	end
 end
 
 function moveReg(ox1,ox2,oy1,oy2,nx,ny)
@@ -655,7 +326,6 @@ for pixx=ox1,ox2,1 do
 		gui.drawpixel(pixx+nx, pixy+ny, {r,g,b,255})
 	end
 end
-return nil
 end
 
 function drawhud()
@@ -693,8 +363,8 @@ if(memory.readbyte(usesAdd) > 0x0) then
  gui.text(90,205,"*x"..memory.readbyte(usesAdd),"#7c0800","#fcd8a8")
 end
 
-gui.text(50,218,names[memory.readbyte(powerupAdd)][1],"#7c0800","#fcd8a8")
-gui.text(154,185,names[memory.readbyte(powerupAdd)][2],"#7c0800","#fcd8a8")
+gui.text(50,218,powerups[memory.readbyte(powerupAdd)][1][1],"#7c0800","#fcd8a8")
+gui.text(154,185,powerups[memory.readbyte(powerupAdd)][1][2],"#7c0800","#fcd8a8")
 
 end
 end
@@ -821,15 +491,6 @@ function knightmare()
  if(memory.readbyte(groundedAdd) == 0x04) then jumpsLeft = 4 end
  memory.writebyte(bodyAdd,0x03) --sword state
  memory.writebyte(powerupAdd,0xFF) --normal powerup, stops other copy abilities
- memory.writebyte(body,col.rose)
- memory.writebyte(feet,col.blush)
- memory.writebyte(line,col.black)
- memory.writebyte(body2,col.marigold)
- memory.writebyte(feet2,col.carrot)
- memory.writebyte(line2,col.gold)
- memory.writebyte(body4,col.white) --nes metaknight coloring
- memory.writebyte(feet4,col.purple)
- memory.writebyte(line4,col.black)
  --meta knight falls faster, but can recover with floating much quicker, and can hover with aerial attacks
  if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and not (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0x02) end --sink
  if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0xFE) end --float
@@ -846,7 +507,7 @@ function dynamic()
  menus[2][1] = "Recolors: "..(recoloring and "ON" or "off")
  menus[2][2] = "LUA-Based Hud: "..(newhud and "ON" or "off")
  menus[2][3] = "Meta Knightmare: "..(metaknight and "ON" or "off")
- menus[3][1] = "Powerup: "..(names[memory.readbyte(powerupAdd)][1])
+ menus[3][1] = "Powerup: "..(powerups[memory.readbyte(powerupAdd)][1][1])
  menus[3][2] = "Powerup State: "..(bodies[memory.readbyte(bodyAdd)])
  menus[3][3] = "Powerup Uses: "..(memory.readbyte(usesAdd))
 end

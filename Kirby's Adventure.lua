@@ -357,47 +357,46 @@ end
 end
 
 function drawhud()
-if(not(memory.readbyte(pauseAdd) == 0x19 or memory.readbyte(pauseAdd) == 0x25)) then --19 is continue/exit pause, 25 is normal pause
-if(memory.readbyte(livesDisplay) > 0x01) then
-  moveReg(149,191,180,230,-140,0) --moves copy ability box
-else
-  moveReg(149,191,180,230,-140,0) --moves copy ability box
-end
-elseif(memory.readbyte(pauseAdd) == 0x19) then
-  moveReg(22,58,183,225,-10,0) --moves copy ability box
-end
-
-if(not(memory.readbyte(pauseAdd) == 0x25)) then
-gui.text(50,180,"                                   \n                                   \n                                   \n                                   \n                                   \n                                   \n","#7c0800","#fcd8a8")
-
-gui.text(50,184,"HP "..((memory.readbyte(hpAdd)+1)/8),"#7c0800","#fcd8a8")
-gui.text(50,205,"Lives:"..memory.readbyte(livesAdd),"#7c0800","#fcd8a8")
-
-gui.box(80,182,144,202,"#fcd8a8")
-for hpBit=0,5 do
-	if(hpBit <= ((memory.readbyte(hpAdd))/8)) then
-		if(memory.readbyte(hudFlickerAdd) == 122 or memory.readbyte(hudFlickerAdd) == 124) then
-			gui.box(80 + (hpBit*11),182,89 + (hpBit*11),192,"#fc9838","#7c0800")
+	if(not(memory.readbyte(pauseAdd) == 0x19 or memory.readbyte(pauseAdd) == 0x25)) then --19 is continue/exit pause, 25 is normal pause
+		if(memory.readbyte(livesDisplay) > 0x01) then
+			moveReg(149,191,180,230,-140,0) --moves copy ability box
 		else
-			gui.box(80 + (hpBit*11),182,89 + (hpBit*11),192,"#fcd8a8","#7c0800")
+			moveReg(149,191,180,230,-140,0) --moves copy ability box
 		end
-	else
-		gui.box(80 + (hpBit*11),186,89 + (hpBit*11),188,"#fc9838","#7c0800")
+		elseif(memory.readbyte(pauseAdd) == 0x19) then
+			moveReg(22,58,183,225,-10,0) --moves copy ability box
+		end
+
+	if(not(memory.readbyte(pauseAdd) == 0x25)) then
+		gui.text(50,180,"                                   \n                                   \n                                   \n                                   \n                                   \n                                   \n","#7c0800","#fcd8a8")
+		gui.text(50,184,"HP "..((memory.readbyte(hpAdd)+1)/8),"#7c0800","#fcd8a8")
+		gui.text(50,205,"Lives:"..memory.readbyte(livesAdd),"#7c0800","#fcd8a8")
+		gui.box(80,182,144,202,"#fcd8a8")
+	
+		for hpBit=0,5 do --health points
+			if(hpBit <= ((memory.readbyte(hpAdd))/8)) then
+				if(memory.readbyte(hudFlickerAdd) == 122 or memory.readbyte(hudFlickerAdd) == 124) then
+					gui.box(80 + (hpBit*11),182,89 + (hpBit*11),192,"#fc9838","#7c0800")
+				else
+					gui.box(80 + (hpBit*11),182,89 + (hpBit*11),192,"#fcd8a8","#7c0800")
+				end
+			else
+				gui.box(80 + (hpBit*11),186,89 + (hpBit*11),188,"#fc9838","#7c0800")
+			end
+		end
+
+		gui.text(118,218,"id "..memory.readbyte(powerupAdd),"#7c0800","#fcd8a8")
+		if(memory.readbyte(usesAdd) > 0x0) then
+			gui.text(90,205,"*x"..memory.readbyte(usesAdd),"#7c0800","#fcd8a8")
+		end
+
+		gui.text(50,218,powerups[memory.readbyte(powerupAdd)][1][1],"#7c0800","#fcd8a8")
+		gui.text(154,185,powerups[memory.readbyte(powerupAdd)][1][2],"#7c0800","#fcd8a8")
+
 	end
 end
 
-gui.text(118,218,"id "..memory.readbyte(powerupAdd),"#7c0800","#fcd8a8")
-if(memory.readbyte(usesAdd) > 0x0) then
- gui.text(90,205,"*x"..memory.readbyte(usesAdd),"#7c0800","#fcd8a8")
-end
-
-gui.text(50,218,powerups[memory.readbyte(powerupAdd)][1][1],"#7c0800","#fcd8a8")
-gui.text(154,185,powerups[memory.readbyte(powerupAdd)][1][2],"#7c0800","#fcd8a8")
-
-end
-end
-
-function pausee()
+function paused()
 if(memory.readbyte(pauseAdd) == 0x25) then
  pauseText = {"","","","","","","","","","","",""}
  for i=0,#(menus[pauseLevel]),1
@@ -516,41 +515,42 @@ return nil
 end
 
 function knightmare()
- if(memory.readbyte(groundedAdd) == 0x04) then jumpsLeft = 4 end
- memory.writebyte(bodyAdd,0x03) --sword state
- memory.writebyte(powerupAdd,0xFF) --normal powerup, stops other copy abilities
- --meta knight falls faster, but can recover with floating much quicker, and can hover with aerial attacks
- if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and not (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0x02) end --sink
- if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0xFE) end --float
- if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (memory.readbyte(powerAdd) == 0x0C)) then memory.writebyte(yveloAdd,(-1*jumpsLeft)) jumpsLeft=jumpsLeft-1 end --hover
- --(AND(memory.readbyte(controllerAdd),0x40) == 0x40) --FD is max height that feels ok, 00 was meant for when it registered once per button press instead of once per action
- -- also feels much better with weighted limited jumps
- --draws a mask onto his face poorly
- gui.box(memory.readbyte(xposAdd)+10,memory.readbyte(yposAdd)+8,memory.readbyte(xposAdd)+16,memory.readbyte(yposAdd)+6,"P0F") --P03 --P20
+	if(memory.readbyte(groundedAdd) == 0x04) then jumpsLeft = 4 end
+	memory.writebyte(bodyAdd,0x03) --sword state
+	memory.writebyte(powerupAdd,0xFF) --normal powerup, stops other copy abilities
+	--meta knight falls faster, but can recover with floating much quicker, and can hover with aerial attacks
+	if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and not (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0x02) end --sink
+	if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (AND(memory.readbyte(controllerAdd),0x08) == 0x08)) then memory.writebyte(yveloAdd,0xFE) end --float
+	if((memory.readbyte(yveloAdd) > 0x00) and (memory.readbyte(yveloAdd) < 0x03) and (memory.readbyte(powerAdd) == 0x0C)) then memory.writebyte(yveloAdd,(-1*jumpsLeft)) jumpsLeft=jumpsLeft-1 end --hover
+	--(AND(memory.readbyte(controllerAdd),0x40) == 0x40) --FD is max height that feels ok, 00 was meant for when it registered once per button press instead of once per action
+	-- also feels much better with weighted limited jumps
+	--draws a mask onto his face poorly
+	gui.box(memory.readbyte(xposAdd)+10,memory.readbyte(yposAdd)+8,memory.readbyte(xposAdd)+16,memory.readbyte(yposAdd)+6,"P0F") --P03 --P20
 end
  
 function dynamic()
- menus[1][1] = "Health: "..((memory.readbyte(hpAdd)==0xFF) and "0" or ((memory.readbyte(hpAdd)==0x37) and "INF" or ((memory.readbyte(hpAdd)+0x01)/0x08)))
- menus[1][2] = "Lives: "..(memory.readbyte(livesAdd))
- menus[2][1] = "Recolors: "..(recoloring and "ON" or "off")
- menus[2][2] = "LUA-Based Hud: "..(newhud and "ON" or "off")
- menus[2][3] = "Meta Knightmare: "..(metaknight and "ON" or "off")
- menus[3][1] = "Powerup: "..(powerups[memory.readbyte(powerupAdd)][1][1])
- menus[3][2] = "Powerup State: "..(bodies[memory.readbyte(bodyAdd)])
- menus[3][3] = "Powerup Uses: "..(memory.readbyte(usesAdd))
+	menus[1][1] = "Health: "..((memory.readbyte(hpAdd)==0xFF) and "0" or ((memory.readbyte(hpAdd)==0x37) and "INF" or ((memory.readbyte(hpAdd)+0x01)/0x08)))
+	menus[1][2] = "Lives: "..(memory.readbyte(livesAdd))
+	menus[2][1] = "Recolors: "..(recoloring and "ON" or "off")
+	menus[2][2] = "LUA-Based Hud: "..(newhud and "ON" or "off")
+	menus[2][3] = "Meta Knightmare: "..(metaknight and "ON" or "off")
+	menus[3][1] = "Powerup: "..(powerups[memory.readbyte(powerupAdd)][1][1])
+	menus[3][2] = "Powerup State: "..(bodies[memory.readbyte(bodyAdd)])
+	menus[3][3] = "Powerup Uses: "..(memory.readbyte(usesAdd))
 end
 
 function ramLine(l)
- rline = {}
- rline = memory.readbyterange(ramoffset+(l*8),8)
- s=string.upper(string.format("%4x",ramoffset+(l*8)))..": "
- for i=1,8,1 do
-  s = s..string.upper(string.format("%2x",string.byte(rline,i)))
- end
- return s
+	rline = {}
+	rline = memory.readbyterange(ramoffset+(l*8),8)
+	s=string.upper(string.format("%4x",ramoffset+(l*8)))..": "
+	for i=1,8,1 do
+		s = s..string.upper(string.format("%2x",string.byte(rline,i)))
+	end
+	return s
 end
 
 --delays for n amount of time.
+--Haseeb Mir. (haseebmir.hm@gmail.com)
 function sleep(n,str)
   local t = os.clock()
   while os.clock() - t <= n do
@@ -564,7 +564,7 @@ while(true)do
  if(memory.readbyte(titleScreen) == 0) then gui.text(88,40,"LUA ENHANCEMENT","P0F","#00000000") end
  if(recoloring) then memory.register(body3, 0x199, recolor()) end
  if(newhud) then drawhud() end
- memory.register(pauseAdd, 0x01, pausee())
+ memory.register(pauseAdd, 0x01, paused())
 
  if(invinc) then memory.writebyte(hpAdd,0x37) end
  if(metaknight) then knightmare() end

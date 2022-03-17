@@ -224,8 +224,6 @@ menus[3][3] = "" --dynamic power uses
 menus[4][0] = "    PHYSICS    "
 menus[4][1] = "" --dynamic gravity
 menus[5][0] = "      RAM      "
-menus[5][1] = "0000: 0000000000000000"
-menus[5][2] = "0008: 0000000000000000"
 
 --[[other palette locations if it finds a use
 feet3 = 0x0102
@@ -671,18 +669,6 @@ elseif(memory.readbyte(pauseAdd) == 0x19) then
   moveReg(22,58,183,225,-10,0) --moves copy ability box
 end
 
---[[
-if(not(memory.readbyte(pauseAdd) == 0x19 or memory.readbyte(pauseAdd) == 0x25)) then
-if(memory.readbyte(livesDisplay) > 0x01) then
-  moveReg(149,191,180,230,-140,0) --moves copy ability box
-else
-  moveReg(149,191,180,230,-140,0) --moves copy ability box
-end
-elseif(memory.readbyte(pauseAdd) == 0x19) then
-  moveReg(22,58,183,225,-10,0) --moves copy ability box
-end
-]]
-
 if(not(memory.readbyte(pauseAdd) == 0x25)) then
 gui.text(50,180,"                                   \n                                   \n                                   \n                                   \n                                   \n                                   \n","#7c0800","#fcd8a8")
 
@@ -731,18 +717,9 @@ if(memory.readbyte(pauseAdd) == 0x25) then
  end
  else
  gui.box(40,40,215,135,"P30") --blank screen
- gui.text(51+(pauseLevel>0 and 16 or 0),40,pauseText[1],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[1],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),48,pauseText[2],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[2],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),56,pauseText[3],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[3],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),64,pauseText[4],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[4],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),72,pauseText[5],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[5],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),80,pauseText[6],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[6],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),88,pauseText[7],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[7],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),96,pauseText[8],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[8],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),104,pauseText[9],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[9],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),112,pauseText[10],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[10],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),120,pauseText[11],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[11],"clear")
- gui.text(51+(pauseLevel>0 and 16 or 0),128,pauseText[12],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[12],"clear")
+ for i=1,12 do
+  gui.text(51+(pauseLevel>0 and 16 or 0),40+(i*8),pauseText[i],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[i],"clear")
+ end
  gui.text(42+(pauseLevel>0 and 16 or 0),40+(selector*8),">","#000","clear")
  end
  if(pauseLevel>0) then gui.text(42,32+(pauseLevel*8)," > ","clear",pauseColor[pauseLevel]) end
@@ -861,7 +838,7 @@ function knightmare()
  -- also feels much better with weighted limited jumps
  --draws a mask onto his face poorly
  gui.box(memory.readbyte(xposAdd)+10,memory.readbyte(yposAdd)+8,memory.readbyte(xposAdd)+16,memory.readbyte(yposAdd)+6,"P0F") --P03 --P20
- end
+end
  
 function dynamic()
  menus[1][1] = "Health: "..((memory.readbyte(hpAdd)==0xFF) and "0" or ((memory.readbyte(hpAdd)==0x37) and "INF" or ((memory.readbyte(hpAdd)+0x01)/0x08)))
@@ -895,13 +872,14 @@ function sleep(n,str)
 end
 
 while(true)do
-if(memory.readbyte(titleScreen) == 0) then gui.text(88,40,"LUA ENHANCEMENT","P0F","#00000000") end
-if(recoloring) then memory.register(body3, 0x199, recolor()) end
-if(newhud) then drawhud() end
-memory.register(pauseAdd, 0x01, pausee())
+ if(memory.readbyte(titleScreen) == 0) then gui.text(88,40,"LUA ENHANCEMENT","P0F","#00000000") end
+ if(recoloring) then memory.register(body3, 0x199, recolor()) end
+ if(newhud) then drawhud() end
+ memory.register(pauseAdd, 0x01, pausee())
 
-if(invinc) then memory.writebyte(hpAdd,0x37) end
-if(metaknight) then knightmare() end
---memory.register(powerAdd, 60, recolor())
-emu.frameadvance()
+ if(invinc) then memory.writebyte(hpAdd,0x37) end
+ if(metaknight) then knightmare() end
+ --memory.register(powerAdd, 60, recolor())
+ memory.writebyte(0x4029,0x7F)
+ emu.frameadvance()
 end

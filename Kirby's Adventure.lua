@@ -211,7 +211,6 @@ powerups[0x1F][1] = {"Custom 5[Crash]","Deletes save file\nwhen attempting to\nu
 powerups[0xFF][1] = {"Normal","Hit the Down Arrow\nwhen Kirby has an\nenemy in his mouth\nto copy the enemy's\nspecial ability!"}
 powerups[0xFF][0] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.rose,col.blush,col.black} --default
 powerups[0xFF][2] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.snow,col.turquoise,col.royalblue} --2 is "splash", 8 is actual splashing
-powerups[0xFF][8] = {col.rose,col.blush,col.black,col.white,col.canary,col.orange,col.skyblue,col.turquoise,col.royalblue} --due to how the game calls colors it'll usually only get called one time in the room unless you pause, rather than toggle
 powerups[0xFF][3] = {col.rose,col.blush,col.black,col.marigold,col.carrot,col.gold,col.lavender,col.darkblue,col.black} --meta knight
 powerups[0xFF][4] = {col.rose,col.blush,col.black,col.marigold,col.carrot,col.crimson,col.lightblue,col.marigold,col.black} --king dedede
 powerups[0xFF][5] = {col.beige,col.salmon,col.black,col.white,col.canary,col.orange,col.beige,col.salmon,col.black} --default powerup color, as it is otherwise unused
@@ -287,6 +286,7 @@ pwr = memory.readbyte(powerupAdd)
 		memory.writebyte(body4,col.beige)
 		memory.writebyte(feet4,col.salmon)
 		memory.writebyte(line4,col.black)
+		return nil
 	end
 	if(#powerups[pwr] == 2)
 		memory.writebyte(body,powerups[pwr][2][1])
@@ -298,19 +298,47 @@ pwr = memory.readbyte(powerupAdd)
 		memory.writebyte(body4,powerups[pwr][2][7])
 		memory.writebyte(feet4,powerups[pwr][2][8])
 		memory.writebyte(line4,powerups[pwr][2][9])
+		return nil
 	end
 	if(#powerups[pwr] == 3)
 		flicker = memory.readbyte(hudFlickerAdd)
-		
-		memory.writebyte(body,powerups[pwr][2][1])
-		memory.writebyte(feet,powerups[pwr][2][2])
-		memory.writebyte(line,powerups[pwr][2][3])
-		memory.writebyte(body2,powerups[pwr][2][4])
-		memory.writebyte(feet2,powerups[pwr][2][5])
-		memory.writebyte(line2,powerups[pwr][2][6])
-		memory.writebyte(body4,powerups[pwr][2][7])
-		memory.writebyte(feet4,powerups[pwr][2][8])
-		memory.writebyte(line4,powerups[pwr][2][9])
+		if(flicker == 123 or flicker == 124) then
+			memory.writebyte(body,powerups[pwr][2][1])
+			memory.writebyte(feet,powerups[pwr][2][2])
+			memory.writebyte(line,powerups[pwr][2][3])
+			memory.writebyte(body2,powerups[pwr][2][4])
+			memory.writebyte(feet2,powerups[pwr][2][5])
+			memory.writebyte(line2,powerups[pwr][2][6])
+			memory.writebyte(body4,powerups[pwr][2][7])
+			memory.writebyte(feet4,powerups[pwr][2][8])
+			memory.writebyte(line4,powerups[pwr][2][9])
+		else
+			memory.writebyte(body,powerups[pwr][3][1])
+			memory.writebyte(feet,powerups[pwr][3][2])
+			memory.writebyte(line,powerups[pwr][3][3])
+			memory.writebyte(body2,powerups[pwr][3][4])
+			memory.writebyte(feet2,powerups[pwr][3][5])
+			memory.writebyte(line2,powerups[pwr][3][6])
+			memory.writebyte(body4,powerups[pwr][3][7])
+			memory.writebyte(feet4,powerups[pwr][3][8])
+			memory.writebyte(line4,powerups[pwr][3][9])
+		end
+		return nil
+	end
+	if(#powerups[pwr] == 7)
+		splash = memory.readbyte(powerAdd)
+		states = memory.readbyte(statesAdd)
+		memory.writebyte(body,powerups[pwr][splash][1])
+		memory.writebyte(feet,powerups[pwr][splash][2])
+		memory.writebyte(line,powerups[pwr][splash][3])
+		memory.writebyte(body2,powerups[pwr][splash][4])
+		memory.writebyte(feet2,powerups[pwr][splash][5])
+		memory.writebyte(line2,powerups[pwr][splash][6])
+		memory.writebyte(body4,powerups[pwr][splash][7])
+		memory.writebyte(feet4,powerups[pwr][splash][8])
+		memory.writebyte(line4,powerups[pwr][splash][9])
+		if(splash == 2 and states == 8) then memory.writebyte(body4,col.skyblue) end --due to how the game calls colors it'll usually only get called one time in the room unless you pause, rather than toggle
+		return nil
 	end
 end
 

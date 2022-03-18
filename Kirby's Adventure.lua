@@ -25,8 +25,6 @@ Select: Reset the selected menu item / exit RAM table
 
 selector = 0
 pauseLevel = 0
-pauseText = {"","","","","","","","","","","",""}
-pauseText[0] = ""
 pauseColor = {"P16","P27","P28","P2A","P2B","P2C","P11","P14","P24","P00","P0F","P07"}
 ramwatch = false
 ramoffset = 0
@@ -398,82 +396,81 @@ end
 
 function paused()
 if(memory.readbyte(pauseAdd) == 0x25) then
- pauseText = {"","","","","","","","","","","",""}
- for i=0,#(menus[pauseLevel]),1
- do
-  pauseText[i] = menus[pauseLevel][i]
- end
- dynamic()
+	pauseText = {"","","","","","","","","","","",""}
+	for i=0,#(menus[pauseLevel]),1 do
+		pauseText[i] = menus[pauseLevel][i]
+	end
+	dynamic()
 
- gui.text(80,24,pauseText[0],"P16","#ffffff")
- if(ramwatch) then
- gui.box(40,40,215,160,"P30") --blank screen
- gui.text(100+(selector%8)*12,40+math.floor((selector)/8)*8,"00","#000","#000")
- for i=0,15 do
-  gui.text(67,40+(i*8),ramLine(i),pauseColor[5],"clear")
- end
- else
- gui.box(40,40,215,135,"P30") --blank screen
- for i=1,12 do
-  gui.text(51+(pauseLevel>0 and 16 or 0),40+(i*8),pauseText[i],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[i],"clear")
- end
- gui.text(42+(pauseLevel>0 and 16 or 0),40+(selector*8),">","#000","clear")
- end
- if(pauseLevel>0) then gui.text(42,32+(pauseLevel*8)," > ","clear",pauseColor[pauseLevel]) end
+	gui.text(80,24,pauseText[0],"P16","#ffffff")
+	if(ramwatch) then
+		gui.box(40,40,215,160,"P30") --blank screen
+		gui.text(100+(selector%8)*12,40+math.floor((selector)/8)*8,"00","#000","#000")
+		for i=0,15 do
+			gui.text(67,40+(i*8),ramLine(i),pauseColor[5],"clear")
+		end
+	else
+		gui.box(40,40,215,135,"P30") --blank screen
+		for i=1,12 do
+			gui.text(51+(pauseLevel>0 and 16 or 0),40+(i*8),pauseText[i],pauseLevel>0 and pauseColor[pauseLevel] or pauseColor[i],"clear")
+		end
+		gui.text(42+(pauseLevel>0 and 16 or 0),40+(selector*8),">","#000","clear")
+	end
+	if(pauseLevel>0) then gui.text(42,32+(pauseLevel*8)," > ","clear",pauseColor[pauseLevel]) end
 
- if(AND(memory.readbyte(controller2Add),0x01) == 0x01) then --right
-  if(ramwatch) then
-   selector = selector+1
-  else
-   if(pauseLevel == 0) then pauseLevel=selector+1 end
-    selector=0
-   if(pauseLevel == 5) then ramwatch = true end
-  end
- end
+	if(AND(memory.readbyte(controller2Add),0x01) == 0x01) then --right
+		if(ramwatch) then
+			selector = selector+1
+		else
+			if(pauseLevel == 0) then pauseLevel=selector+1 end
+			selector=0
+			if(pauseLevel == 5) then ramwatch = true end
+		end
+	end
  
- if(AND(memory.readbyte(controller2Add),0x02) == 0x02) then --left
-   if(ramwatch) then
-    selector = selector-1
-   else
-    selector = pauseLevel-1
-    if (selector == -1) then selector = 0 end
-    pauseLevel = 0
-  end
- end
+	if(AND(memory.readbyte(controller2Add),0x02) == 0x02) then --left
+		if(ramwatch) then
+			selector = selector-1
+		else
+			selector = pauseLevel-1
+			if (selector == -1) then selector = 0 end
+			pauseLevel = 0
+		end
+	end
  
- if(AND(memory.readbyte(controller2Add),0x04) == 0x04) then --down
-  if(ramwatch) then
-   selector = selector + 8
-   if(selector>127) then
-    selector = selector%128
-    ramoffset = ramoffset + 128
-   end
-   if(ramoffset>65408) then ramoffset = 0 end
-  else
-   selector = selector+1
-   if(selector == #(menus[pauseLevel])) then selector=0 end
-  end
- end
+	if(AND(memory.readbyte(controller2Add),0x04) == 0x04) then --down
+		if(ramwatch) then
+			selector = selector + 8
+			if(selector>127) then
+				selector = selector%128
+				ramoffset = ramoffset + 128
+			end
+			if(ramoffset>65408) then ramoffset = 0 end
+		else
+			selector = selector+1
+			if(selector == #(menus[pauseLevel])) then selector=0 end
+		end
+	end
  
- if(AND(memory.readbyte(controller2Add),0x08) == 0x08) then --up
-  if(ramwatch) then
-   selector = selector - 8
-   if(selector<0) then
-    selector = selector%128
-    ramoffset = ramoffset - 128
-   end
-   if(ramoffset<0) then ramoffset = 65408 end
-  else
-   selector = selector-1
-   if(selector == -1) then selector=#(menus[pauseLevel]) - 1 end
-  end
- end
+	if(AND(memory.readbyte(controller2Add),0x08) == 0x08) then --up
+		if(ramwatch) then
+			selector = selector - 8
+			if(selector<0) then
+				selector = selector%128
+				ramoffset = ramoffset - 128
+			end
+			if(ramoffset<0) then ramoffset = 65408 end
+		else
+			selector = selector-1
+			if(selector == -1) then selector=#(menus[pauseLevel]) - 1 end
+		end
+	end
  
- if(AND(memory.readbyte(controller2Add),0x20) == 0x20) then --select
- selector=0
- pauseLevel=0
- ramwatch = false
- end
+if(AND(memory.readbyte(controller2Add),0x20) == 0x20) then --select
+	selector=0
+	pauseLevel=0
+	ramwatch = false
+end
  
  if(AND(memory.readbyte(controller2Add),0x40) == 0x40) then
  if(selector==0) then recoloring = not recoloring end

@@ -34,6 +34,7 @@ newhud = false
 invinc = false
 metaknight = true
 jumpsLeft = 4
+gravity = -1
 
 --[[
 memory addresses of some use not featured here
@@ -62,7 +63,7 @@ cannonAdd = 0x050C --is in a cannon?
 scoreAdd = 0x0593 --score address
 bodyAdd = 0x05E0 --powerup state ie hammer normal sleeping
 powerAdd = 0x05E1 --move being done
-inhaledAdd = 05E2 --power of enemy in mouth
+inhaledAdd = 0x05E2 --power of enemy in mouth
 powerupAdd = 0x05E3 --current powerup
 powerup2Add = 0x076D
 stateAdd = 0x004E
@@ -284,6 +285,7 @@ menus[0][5] = "RAM"
 menus[1][0] = "     BASICS    "
 menus[1][1] = "" --dynamic health
 menus[1][2] = "" --dynamic lives
+menus[1][3] = "" --dynamic score
 menus[2][0] = "  ENHANCEMENTS "
 menus[2][1] = "" --dynamic recolors
 menus[2][2] = "" --dynamic lua menu
@@ -292,6 +294,7 @@ menus[3][0] = "    POWERS     "
 menus[3][1] = "" --dynamic power
 menus[3][2] = "" --dynamic power state
 menus[3][3] = "" --dynamic power uses
+menus[3][4] = "" --dynamic inhaled power
 menus[4][0] = "    PHYSICS    "
 menus[4][1] = "" --dynamic gravity
 menus[5][0] = "      RAM      "
@@ -299,11 +302,35 @@ menus[5][0] = "      RAM      "
 --[[data struct for editing within the menu
 	location in array is same as where it is in the menu
 	[x][y][1] will be the type of variable
+	1: single byte ram address [address] [min] [max] [increment] [default (optional)]
+	2: multiple byte ram addresses [address] [signed length] [min] [max] [increment] [default (optional)]
+	NOTE: Endian-ness determined by the sign of length, address is always the least significant figure
+	3: single byte ram address, flag variable if one over [address] [min] [max] [increment] [var number] [default (optional)]
+	4: lua integer variable [var number] [min] [max] [increment] [default (optional)]
+	5: lua boolean variable [var number] [default (optional)]
 	
+	var numbers:
+	1 recoloring	2 newhud		3 metaknight
+	4 invinc		5 gravity		6 preserveFloat
 ]]
 
 kirbvar={}
-kirbvar[1][1] = {}--health
+kirbvar[1] = {}
+kirbvar[1][1] = {3, hpAdd, 0x01, 0x37, 0x08, invincible, 0x2F} --health
+kirbvar[1][2] = {1, livesAdd, 0x00, 0x63, 0x01, 0x04} --lives
+kirbvar[1][3] = {2, scoreAdd, 3, 0x0, 0xFFFFFF, 0x01} --score
+kirbvar[2] = {}
+kirbvar[2][1] = {5, 1, false} --recoloring
+kirbvar[2][2] = {5, 2, false} --lua menu
+kirbvar[2][3] = {5, 3, false} --knightmare
+kirbvar[3] = {}
+kirbvar[3][1] = {1, powerupAdd, -0x01, 0x1F, 0x01, 0xFF} --powerup
+kirbvar[3][2] = {1, bodyAdd, 0x00, 0x0E, 0x01, 0x00} --body state
+kirbvar[3][3] = {1, usesAdd, 0x00, 0x0F, 0x01, 0x00} --powerup uses
+kirbvar[3][4] = {1, inhaledAdd, -0x01, 0x1F, 0x01, 0xFF} --powerup in mouth
+kirbvar[4] = {}
+kirbvar[4][1] = {4, 4, -4, 4, 1, 0} --gravity
+kirbvar[4][2] = {5, 5, false} --preserve float gravity
 
 --[[other palette locations if it finds a use
 feet3 = 0x0102
@@ -513,52 +540,26 @@ if(memory.readbyte(pauseAdd) == 0x25) then
 		end
 	end
  
-if(AND(memory.readbyte(controller2Add),0x20) == 0x20) then --select
-	if(ramwatch) then
-		selector=5 --ram
-		--dont reset ramoffset?
-		pauseLevel=0
-		ramwatch = false
+	if(AND(memory.readbyte(controller2Add),0x20) == 0x20) then --select, start is 0x10
+		if(ramwatch) then
+			selector=5 --ram
+			--dont reset ramoffset?
+			pauseLevel=0
+			ramwatch = false
+		end
 	end
-end
- 
- if(AND(memory.readbyte(controller2Add),0x40) == 0x40) then
- if(selector==0) then recoloring = not recoloring end
- if(selector==1) then newhud = not newhud end
- if(selector==2) then invinc = false memory.writebyte(hpAdd, memory.readbyte(hpAdd)-0x08) end
- if(selector==3) then memory.writebyte(livesAdd, memory.readbyte(livesAdd)-0x01) end
- if(selector==4) then memory.writebyte(powerupAdd, memory.readbyte(powerupAdd)-0x01) end
- if(selector==5) then memory.writebyte(bodyAdd, memory.readbyte(bodyAdd)-0x01) end
- if(selector==6) then memory.writebyte(usesAdd, memory.readbyte(usesAdd)-0x01) end
- if(selector==11) then metaknight = not metaknight end
- 
- if(memory.readbyte(hpAdd)==0xF7) then invinc=true else invinc = false end
- if(memory.readbyte(livesAdd)==0xFF) then memory.writebyte(livesAdd,0x63) end
- if(memory.readbyte(powerupAdd)==0xFE) then memory.writebyte(powerupAdd,0x1F) end
- if(memory.readbyte(bodyAdd)==0xFF) then memory.writebyte(bodyAdd,0x0E) end
- if(memory.readbyte(usesAdd)==0xFF) then memory.writebyte(usesAdd,0x0F) end
- end
+	 
+	if(AND(memory.readbyte(controller2Add),0x40) == 0x40) then --b
+		changeVar(-1)
+	end
 
- 
- if(AND(memory.readbyte(controllerAdd),0x02) == 0x02 or AND(memory.readbyte(controller2Add),0x80) == 0x80) then
- if(selector==0) then recoloring = not recoloring end
- if(selector==1) then newhud = not newhud end
- if(selector==2) then invinc = false memory.writebyte(hpAdd, memory.readbyte(hpAdd)+0x08) end
- if(selector==3) then memory.writebyte(livesAdd, memory.readbyte(livesAdd)+0x01) end
- if(selector==4) then memory.writebyte(powerupAdd, memory.readbyte(powerupAdd)+0x01) end
- if(selector==5) then memory.writebyte(bodyAdd, memory.readbyte(bodyAdd)+0x01) end
- if(selector==6) then memory.writebyte(usesAdd, memory.readbyte(usesAdd)+0x01) end
- if(selector==11) then metaknight = not metaknight end
- 
- if(memory.readbyte(hpAdd)>0x37) then memory.writebyte(hpAdd,0xFF) end
- if(memory.readbyte(hpAdd)==0x37 or invinc) then invinc=true else invinc = false end
- if(memory.readbyte(livesAdd)>0x63) then memory.writebyte(livesAdd,0x00) end
- if(memory.readbyte(powerupAdd)>0x1F) then memory.writebyte(powerupAdd,0xFF) end
- if(memory.readbyte(bodyAdd)>0x0E) then memory.writebyte(bodyAdd,0x00) end
- if(memory.readbyte(usesAdd)>0x0F) then memory.writebyte(usesAdd,0x00) end
- end
-end
-return nil
+	 
+	if(AND(memory.readbyte(controller2Add),0x80) == 0x80) then --a
+		changeVar(1)
+	end
+
+	end
+	return nil
 end
 
 function knightmare()
@@ -584,10 +585,31 @@ function dynamic()
 	menus[3][1] = "Powerup: "..(powerups[memory.readbyte(powerupAdd)][1][1])
 	menus[3][2] = "Powerup State: "..(bodies[memory.readbyte(bodyAdd)])
 	menus[3][3] = "Powerup Uses: "..(memory.readbyte(usesAdd))
+	menus[3][4] = "Inhaled Power: "..(powerups[memory.readbyte(inhaledAdd)][1][1])
 end
-
+--[[
+var numbers:
+	1 recoloring	2 newhud		3 metaknight
+	4 invinc		5 gravity		6 preserveFloat
+]]
 function changeVar(amt)
-
+	tempVar = kirbvar[pauseLevel][selector+1]
+	if(tempVar[1] == 5) then
+		if(tempVar[2] == 1) then recoloring = not recoloring end
+		if(tempVar[2] == 2) then newhud = not newhud end
+		if(tempVar[2] == 3) then metaknight = not metaknight end
+		if(tempVar[2] == 4) then invinc = not invinc end
+		if(tempVar[2] == 5) then gravity = gravity + amt end
+		if(tempVar[2] == 6) then preserveFloat = not preserveFloat end
+	end
+	if(tempVar[1] == 1) then
+		memory.writebyte(tempVar[2], memory.readbyte(tempVar[2])+(tempVar[5]*amt))
+		if(amt>=0) then --positive change, check max
+			if(memory.readbyte(tempVar[2])>tempVar[4]) then memory.writebyte(tempVar[2],tempVar[3]) end
+		else --else check min
+			if(memory.readbyte(tempVar[2])<tempVar[3]) then memory.writebyte(tempVar[3],tempVar[2]) end
+		end
+	end
 end
 
 function ramLine(l)
@@ -613,7 +635,7 @@ end
 
 while(true)do
  if(memory.readbyte(titleScreen) == 0) then gui.text(88,40,"LUA ENHANCEMENT","P0F","#00000000") end
- if(recoloring) then memory.register(body3, 0x199, recolor()) end
+ if(recoloring) then recolor() end
  if(newhud) then drawhud() end
  memory.register(pauseAdd, 0x01, paused())
 
